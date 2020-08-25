@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2020-08-25T03:10:06Z</date>
+    <groups>
+        <group>
+            <name>Templates/Server hardware</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template QNAP RAID status</template>
+            <name>Template QNAP RAID status</name>
+            <groups>
+                <group>
+                    <name>Templates/Server hardware</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>RAID</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>RAID devices discovery</name>
+                    <key>vfs.dev.raid.discovery</key>
+                    <delay>1h</delay>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#DEVNAME}</macro>
+                                <value>{$VFS.DEV.DISCOVERY_RAID.NOT_MATCHES}</value>
+                                <operator>NOT_MATCHES_REGEX</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#DEVNAME}</macro>
+                                <value>{$VFS.DEV.DISCOVERY_SMART.MATCHES}</value>
+                                <formulaid>B</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#DEVTYPE}</macro>
+                                <value>{$VFS.DEV.DISCOVERY_SMART.DEVTYPE.MATCHES}</value>
+                                <formulaid>C</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#DEVNAME}: RAID active drives</name>
+                            <key>raid.active[{#DEVNAME}]</key>
+                            <delay>15m</delay>
+                            <applications>
+                                <application>
+                                    <name>RAID</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: RAID failed drives</name>
+                            <key>raid.failed[{#DEVNAME}]</key>
+                            <delay>15m</delay>
+                            <applications>
+                                <application>
+                                    <name>RAID</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: RAID status</name>
+                            <key>raid.state[{#DEVNAME}]</key>
+                            <delay>5m</delay>
+                            <applications>
+                                <application>
+                                    <name>RAID</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&gt;0</expression>
+                                    <name>{#DEVNAME}: RAID degraded mode detected</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: RAID working drives</name>
+                            <key>raid.working[{#DEVNAME}]</key>
+                            <delay>15m</delay>
+                            <applications>
+                                <application>
+                                    <name>RAID</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <params>1h</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+        <template>
+            <template>Template QNAP SMART status</template>
+            <name>Template QNAP SMART status</name>
+            <groups>
+                <group>
+                    <name>Templates/Server hardware</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>SMART</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>RAID devices discovery</name>
+                    <key>vfs.dev.smart.discovery</key>
+                    <delay>1h</delay>
+                    <filter>
+                        <conditions>
+                            <condition>
+                                <macro>{#DEVNAME}</macro>
+                                <value>{$VFS.DEV.DISCOVERY_SMART.NOT_MATCHES}</value>
+                                <operator>NOT_MATCHES_REGEX</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                            <condition>
+                                <macro>{#DEVNAME}</macro>
+                                <value>{$VFS.DEV.DISCOVERY_SMART.MATCHES}</value>
+                                <formulaid>B</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#DEVNAME}: SMART Current Pending Sector Count</name>
+                            <key>hdd.smart[{#DEVNAME},Current_Pending_Sector]</key>
+                            <delay>1h</delay>
+                            <description>Count of &quot;unstable&quot; sectors (waiting to be remapped, because of unrecoverable read errors). If an unstable sector is subsequently read successfully, the sector is remapped and this value is decreased. Read errors on a sector will not remap the sector immediately (since the correct value cannot be read and so the value to remap is not known, and also it might become readable later); instead, the drive firmware remembers that the sector needs to be remapped, and will remap it the next time it's written.</description>
+                            <applications>
+                                <application>
+                                    <name>SMART</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: SMART Uncorrectable Sector Count</name>
+                            <key>hdd.smart[{#DEVNAME},Offline_Uncorrectable]</key>
+                            <delay>1h</delay>
+                            <description>The total count of uncorrectable errors when reading/writing a sector. A rise in the value of this attribute indicates defects of the disk surface and/or problems in the mechanical subsystem.</description>
+                            <applications>
+                                <application>
+                                    <name>SMART</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: SMART Read Error Rate</name>
+                            <key>hdd.smart[{#DEVNAME},Raw_Read_Error_Rate]</key>
+                            <delay>1h</delay>
+                            <description>Stores data related to the rate of hardware read errors that occurred when reading data from a disk surface. The raw value has different structure for different vendors and is often not meaningful as a decimal number.</description>
+                            <applications>
+                                <application>
+                                    <name>SMART</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: SMART Reallocated Event Count</name>
+                            <key>hdd.smart[{#DEVNAME},Reallocated_Event_Count]</key>
+                            <delay>1h</delay>
+                            <description>Count of remap operations. The raw value of this attribute shows the total count of attempts to transfer data from reallocated sectors to a spare area. Both successful and unsuccessful attempts are counted.</description>
+                            <applications>
+                                <application>
+                                    <name>SMART</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#DEVNAME}: SMART Reallocated Sector Count</name>
+                            <key>hdd.smart[{#DEVNAME},Reallocated_Sector_Ct]</key>
+                            <delay>1h</delay>
+                            <description>Count of reallocated sectors. The raw value represents a count of the bad sectors that have been found and remapped.&#13;
+Thus, the higher the attribute value, the more sectors the drive has had to reallocate. This value is primarily used as a metric of the life expectancy of the drive; a drive which has had any reallocations at all is significantly more likely to fail in the immediate months.</description>
+                            <applications>
+                                <application>
+                                    <name>SMART</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                    </item_prototypes>
+                    <trigger_prototypes>
+                        <trigger_prototype>
+                            <expression>{Template QNAP SMART status:hdd.smart[{#DEVNAME},Raw_Read_Error_Rate].last()}&gt;0 or {Template QNAP SMART status:hdd.smart[{#DEVNAME},Reallocated_Sector_Ct].last()}&gt;0 or {Template QNAP SMART status:hdd.smart[{#DEVNAME},Reallocated_Event_Count].last()}&gt;0 or {Template QNAP SMART status:hdd.smart[{#DEVNAME},Current_Pending_Sector].last()}&gt;0 or {Template QNAP SMART status:hdd.smart[{#DEVNAME},Offline_Uncorrectable].last()}&gt;0</expression>
+                            <name>{#DEVNAME}: SMART value is increased</name>
+                            <priority>HIGH</priority>
+                        </trigger_prototype>
+                    </trigger_prototypes>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <params>1h</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>
