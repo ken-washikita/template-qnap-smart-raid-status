@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-08-25T03:10:06Z</date>
+    <date>2020-08-25T03:44:23Z</date>
     <groups>
         <group>
             <name>Templates/Server hardware</name>
@@ -30,18 +30,18 @@
                         <conditions>
                             <condition>
                                 <macro>{#DEVNAME}</macro>
-                                <value>{$VFS.DEV.DISCOVERY_RAID.NOT_MATCHES}</value>
+                                <value>{$VFS.DEV.RAID.DISCOVERY.NOT_MATCHES}</value>
                                 <operator>NOT_MATCHES_REGEX</operator>
                                 <formulaid>A</formulaid>
                             </condition>
                             <condition>
                                 <macro>{#DEVNAME}</macro>
-                                <value>{$VFS.DEV.DISCOVERY_SMART.MATCHES}</value>
+                                <value>{$VFS.DEV.RAID.DISCOVERY.MATCHES}</value>
                                 <formulaid>B</formulaid>
                             </condition>
                             <condition>
                                 <macro>{#DEVTYPE}</macro>
-                                <value>{$VFS.DEV.DISCOVERY_SMART.DEVTYPE.MATCHES}</value>
+                                <value>{$VFS.DEV.RAID.DISCOVERY.DEVTYPE.MATCHES}</value>
                                 <formulaid>C</formulaid>
                             </condition>
                         </conditions>
@@ -126,13 +126,13 @@
                         <conditions>
                             <condition>
                                 <macro>{#DEVNAME}</macro>
-                                <value>{$VFS.DEV.DISCOVERY_SMART.NOT_MATCHES}</value>
+                                <value>{$VFS.DEV.SMART.DISCOVERY.NOT_MATCHES}</value>
                                 <operator>NOT_MATCHES_REGEX</operator>
                                 <formulaid>A</formulaid>
                             </condition>
                             <condition>
                                 <macro>{#DEVNAME}</macro>
-                                <value>{$VFS.DEV.DISCOVERY_SMART.MATCHES}</value>
+                                <value>{$VFS.DEV.SMART.DISCOVERY.MATCHES}</value>
                                 <formulaid>B</formulaid>
                             </condition>
                         </conditions>
