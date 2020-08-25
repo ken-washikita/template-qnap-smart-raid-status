@@ -13,7 +13,7 @@ Zabbix Templates for QNAP - Status check SMART and RAID
    zabbix ALL=(ALL) NOPASSWD: /usr/sbin/smartctl -d ata -A /dev/sd?
    zabbix ALL=(ALL) NOPASSWD: /sbin/mdadm -D /dev/md*
    ~~~
-   to /usr/etc/sudoers
+   to QNAP:/usr/etc/sudoers
 1. Reload QNAP Zabbix-agent
 1. Import Templates XML on Zabbix server
 1. Configure QNAP host
