@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-08-26T11:48:57Z</date>
+    <date>2020-08-26T14:40:16Z</date>
     <groups>
         <group>
             <name>Templates/Server hardware</name>
@@ -74,7 +74,7 @@
                             </applications>
                             <trigger_prototypes>
                                 <trigger_prototype>
-                                    <expression>{last()}&gt;0</expression>
+                                    <expression>{last()}&lt;1</expression>
                                     <name>{#DEVNAME}: RAID degraded mode detected</name>
                                     <priority>DISASTER</priority>
                                 </trigger_prototype>
