@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-08-25T03:44:23Z</date>
+    <date>2020-08-26T11:48:57Z</date>
     <groups>
         <group>
             <name>Templates/Server hardware</name>
@@ -27,6 +27,7 @@
                     <key>vfs.dev.raid.discovery</key>
                     <delay>1h</delay>
                     <filter>
+                        <evaltype>AND</evaltype>
                         <conditions>
                             <condition>
                                 <macro>{#DEVNAME}</macro>
@@ -38,11 +39,6 @@
                                 <macro>{#DEVNAME}</macro>
                                 <value>{$VFS.DEV.RAID.DISCOVERY.MATCHES}</value>
                                 <formulaid>B</formulaid>
-                            </condition>
-                            <condition>
-                                <macro>{#DEVTYPE}</macro>
-                                <value>{$VFS.DEV.RAID.DISCOVERY.DEVTYPE.MATCHES}</value>
-                                <formulaid>C</formulaid>
                             </condition>
                         </conditions>
                     </filter>
@@ -95,14 +91,18 @@
                             </applications>
                         </item_prototype>
                     </item_prototypes>
-                    <preprocessing>
-                        <step>
-                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <params>1h</params>
-                        </step>
-                    </preprocessing>
                 </discovery_rule>
             </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$VFS.DEV.RAID.DISCOVERY.MATCHES}</macro>
+                    <value>.+</value>
+                </macro>
+                <macro>
+                    <macro>{$VFS.DEV.RAID.DISCOVERY.NOT_MATCHES}</macro>
+                    <value>^\s$</value>
+                </macro>
+            </macros>
         </template>
         <template>
             <template>Template QNAP SMART status</template>
@@ -119,10 +119,11 @@
             </applications>
             <discovery_rules>
                 <discovery_rule>
-                    <name>RAID devices discovery</name>
+                    <name>SMART devices discovery</name>
                     <key>vfs.dev.smart.discovery</key>
                     <delay>1h</delay>
                     <filter>
+                        <evaltype>AND</evaltype>
                         <conditions>
                             <condition>
                                 <macro>{#DEVNAME}</macro>
@@ -202,14 +203,18 @@ Thus, the higher the attribute value, the more sectors the drive has had to real
                             <priority>HIGH</priority>
                         </trigger_prototype>
                     </trigger_prototypes>
-                    <preprocessing>
-                        <step>
-                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
-                            <params>1h</params>
-                        </step>
-                    </preprocessing>
                 </discovery_rule>
             </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$VFS.DEV.SMART.DISCOVERY.MATCHES}</macro>
+                    <value>.+</value>
+                </macro>
+                <macro>
+                    <macro>{$VFS.DEV.SMART.DISCOVERY.NOT_MATCHES}</macro>
+                    <value>^\s$</value>
+                </macro>
+            </macros>
         </template>
     </templates>
 </zabbix_export>
